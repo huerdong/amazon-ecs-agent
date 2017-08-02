@@ -93,6 +93,7 @@ func (manager *metadataManager) CreateMetadata(config *docker.Config, hostConfig
 	// Create metadata file
 	err = createMetadataFile(metadataDirectoryPath)
 	if err != nil {
+		seelog.Infof(">>>>>>> ERROR %v", err)
 		return err
 	}
 	seelog.Infof(">>>>>> TEST4")
