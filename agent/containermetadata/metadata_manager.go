@@ -22,6 +22,7 @@ import (
 	"github.com/aws/amazon-ecs-agent/agent/api"
 	"github.com/aws/amazon-ecs-agent/agent/config"
 
+	"github.com/cihub/seelog"
 	docker "github.com/fsouza/go-dockerclient"
 )
 
@@ -74,24 +75,27 @@ func (manager *metadataManager) CreateMetadata(config *docker.Config, hostConfig
 	if container.IsInternal {
 		return nil
 	}
-
+	seelog.Infof(">>>>>> TEST1")
 	// Create task and container directories if they do not yet exist
 	metadataDirectoryPath, err := getMetadataFilePath(task, container, manager.dataDir)
 	// Stop metadata creation if path is malformed for any reason
 	if err != nil {
 		return fmt.Errorf("container metadata create: %v", err)
 	}
+	seelog.Infof(">>>>>> TEST2")
 
 	err = os.MkdirAll(metadataDirectoryPath, os.ModePerm)
 	if err != nil {
 		return err
 	}
+	seelog.Infof(">>>>>> TEST3")
 
 	// Create metadata file
 	err = createMetadataFile(metadataDirectoryPath)
 	if err != nil {
 		return err
 	}
+	seelog.Infof(">>>>>> TEST4")
 
 	// Acquire the metadata then write it in JSON format to the file
 	metadata := manager.parseMetadataAtContainerCreate(task, container)
@@ -100,11 +104,13 @@ func (manager *metadataManager) CreateMetadata(config *docker.Config, hostConfig
 	if err != nil {
 		return err
 	}
+	seelog.Infof(">>>>>> TEST5")
 
 	// Add the directory of this container's metadata to the container's mount binds
 	// Then add the destination directory as an environment variable in the container $METADATA
 	binds := createBinds(hostConfig.Binds, manager.dataDirOnHost, metadataDirectoryPath, container.Name)
 	hostConfig.Binds = binds
+	seelog.Infof(">>>>>> TEST6")
 
 	// Add the destination directory of the mount path to the container's environment variables as
 	// ECS_CONTAINER_METADATA
